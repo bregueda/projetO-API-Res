@@ -29,17 +29,39 @@ const users = [
     {id: 3, name: "", email: ""}, 
 ]; 
 
-function cadastrarUsuario(nome, email) {
-    const novoUsuario = {
+
+function cadastrarUsers (nome, email) {
+    const newUser = {
         id: users.length + 1,
         name: nome,
         email: email
     };
 
-    users.push(novoUsuario);
+    users.push(newUser);
 
-    return novoUsuario;
+    return newUser;
 }
+
+function validarUser(req, res, next) {
+    const { nome } = req.body;
+
+    if (!nome) {
+        return res.status(400).json({
+            mensagem: "O nome é obrigatório!"
+        });
+    }
+
+    next();
+}
+
+app.post("/usuarios", validarUser, (req, res) => {
+    const { nome } = req.body;
+
+    const users = cadastrarUsers(nome);
+
+    res.status(200).json(users);
+});
+
  
 app.listen(PORT, () => { 
     console.log(`Server is running on port ${PORT}`); 
