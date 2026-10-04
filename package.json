@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/bregueda/projetO-API-Res#readme",
   "dependencies": {
-    "express": "^5.2.1"
-  },
-  "devDependencies": {}
+    "express": "^5.2.1",
+    "readline-sync": "^1.4.10"
+  }
 }
