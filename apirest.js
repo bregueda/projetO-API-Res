@@ -29,8 +29,17 @@ const users = [
     {id: 3, name: "", email: ""}, 
 ]; 
 
+function cadastrarUsuario(nome, email) {
+    const novoUsuario = {
+        id: users.length + 1,
+        name: nome,
+        email: email
+    };
 
+    users.push(novoUsuario);
 
+    return novoUsuario;
+}
  
 app.listen(PORT, () => { 
     console.log(`Server is running on port ${PORT}`); 
