@@ -24,12 +24,12 @@ const answers = [
     { id: 3, questionId: 3, userId: 3, answer: "" },
 ];
 
-const users = [
-    { id: 1, name: "", email: "" },
-    { id: 2, name: "", email: "" },
-    { id: 3, name: "", email: "" },
-];
 
+const users = [
+    { id: 1, name: "", email: "", pontuacao: 0 },
+    { id: 2, name: "", email: "", pontuacao: 0 },
+    { id: 3, name: "", email: "", pontuacao: 0 },
+];
 
 
 const rl = readline.createInterface({
@@ -38,13 +38,13 @@ const rl = readline.createInterface({
 });
 
 
-
-
 function cadastrarUsers(nome, email) {
+
     const newUser = {
         id: users.length + 1,
         name: nome,
-        email: email
+        email: email,
+        pontuacao: 0
     };
 
     users.push(newUser);
@@ -53,9 +53,8 @@ function cadastrarUsers(nome, email) {
 }
 
 
-
-
 function cadastrarQuestion(quizId, text, options, correctAnswer) {
+
     const newQuestion = {
         id: questions.length + 1,
         quizId: quizId,
@@ -70,7 +69,88 @@ function cadastrarQuestion(quizId, text, options, correctAnswer) {
 }
 
 
+function responderPergunta(userId, questionId, resposta) {
 
+    const usuario = users.find(
+        user => user.id === userId
+    );
+
+    const pergunta = questions.find(
+        question => question.id === questionId
+    );
+
+    if (!usuario) {
+        return {
+            erro: "Usuário não encontrado!"
+        };
+    }
+
+    if (!pergunta) {
+        return {
+            erro: "Pergunta não encontrada!"
+        };
+    }
+
+    const acertou =
+        resposta.toLowerCase() ===
+        pergunta.correctAnswer.toLowerCase();
+
+
+    
+
+    const novaResposta = {
+
+        id: answers.length + 1,
+
+        questionId: questionId,
+
+        userId: userId,
+
+        answer: resposta
+
+    };
+
+    answers.push(novaResposta);
+
+    if (acertou) {
+
+        usuario.pontuacao += 10;
+
+        return {
+            mensagem: "Resposta correta!",
+            pontosGanhos: 10,
+            pontuacaoAtual: usuario.pontuacao
+        };
+
+    } else {
+
+        return {
+            mensagem: "Resposta incorreta!",
+            pontosGanhos: 0,
+            pontuacaoAtual: usuario.pontuacao
+        };
+
+    }
+
+}
+
+
+function gerarRanking() {
+
+    const ranking = [...users]
+        .sort((a, b) => b.pontuacao - a.pontuacao)
+        .map((user, index) => {
+
+            return {
+                posicao: index + 1,
+                nome: user.name,
+                pontuacao: user.pontuacao
+            };
+
+        });
+
+    return ranking;
+}
 
 function cadastrarUsuarioMenu() {
 
@@ -78,19 +158,20 @@ function cadastrarUsuarioMenu() {
 
         rl.question("Digite o email: ", (email) => {
 
-            const novoUsuario = cadastrarUsers(nome, email);
+            const novoUsuario =
+                cadastrarUsers(nome, email);
 
-            console.log("\n✅ Usuário cadastrado com sucesso!");
+            console.log("\n Usuário cadastrado com sucesso!");
+
             console.table(novoUsuario);
 
             menu();
+
         });
 
     });
 
 }
-
-
 
 
 function cadastrarPerguntaMenu() {
@@ -105,21 +186,28 @@ function cadastrarPerguntaMenu() {
 
                     rl.question("Digite a alternativa C: ", (c) => {
 
-                        rl.question("Digite a resposta correta: ", (correctAnswer) => {
+                        rl.question(
+                            "Digite a resposta correta: ",
+                            (correctAnswer) => {
 
-                            const novaPergunta = cadastrarQuestion(
-                                Number(quizId),
-                                text,
-                                [a, b, c],
-                                correctAnswer
-                            );
+                                const novaPergunta =
+                                    cadastrarQuestion(
+                                        Number(quizId),
+                                        text,
+                                        [a, b, c],
+                                        correctAnswer
+                                    );
 
-                            console.log("\n Pergunta cadastrada!");
-                            console.table(novaPergunta);
+                                console.log(
+                                    "\n Pergunta cadastrada!"
+                                );
 
-                            menu();
+                                console.table(novaPergunta);
 
-                        });
+                                menu();
+
+                            }
+                        );
 
                     });
 
@@ -134,109 +222,207 @@ function cadastrarPerguntaMenu() {
 }
 
 
+function responderPerguntaMenu() {
 
-function deletarQuizMenu() {
+    rl.question("Digite o ID do usuário: ", (userId) => {
 
-    rl.question("Digite o ID do quiz que deseja deletar: ", (id) => {
+        rl.question("Digite o ID da pergunta: ", (questionId) => {
 
-        const quizId = Number(id);
+            rl.question("Digite sua resposta: ", (resposta) => {
 
-        const index = quizzes.findIndex(
-            quiz => quiz.id === quizId
-        );
+                const resultado = responderPergunta(
+                    Number(userId),
+                    Number(questionId),
+                    resposta
+                );
 
-        if (index !== -1) {
+                console.log("\nResultado:");
 
-            const quizRemovido = quizzes.splice(index, 1);
+                console.table(resultado);
 
-            console.log("\n Quiz deletado com sucesso!");
-            console.table(quizRemovido);
+                menu();
 
-        } else {
+            });
 
-            console.log("\n Quiz não encontrado!");
+        });
 
-        }
-
-        menu();
     });
+
 }
 
 
+function rankingMenu() {
+
+    console.log("\n RANKING DOS USUÁRIOS");
+
+    console.log("==============================");
+
+    const ranking = gerarRanking();
+
+    console.table(ranking);
+
+    menu();
+
+}
+
+function deletarQuizMenu() {
+
+    rl.question(
+        "Digite o ID do quiz que deseja deletar: ",
+        (id) => {
+
+            const quizId = Number(id);
+
+            const index = quizzes.findIndex(
+                quiz => quiz.id === quizId
+            );
+
+            if (index !== -1) {
+
+                const quizRemovido =
+                    quizzes.splice(index, 1);
+
+                console.log(
+                    "\n Quiz deletado com sucesso!"
+                );
+
+                console.table(quizRemovido);
+
+            } else {
+
+                console.log(
+                    "\n Quiz não encontrado!"
+                );
+
+            }
+
+            menu();
+
+        }
+    );
+
+}
 
 
 function menu() {
 
     console.log("\n==============================");
+
     console.log("       MENU DO SISTEMA");
+
     console.log("==============================");
+
     console.log("1 - Cadastrar usuário");
+
     console.log("2 - Listar usuários");
+
     console.log("3 - Cadastrar pergunta");
+
     console.log("4 - Listar quizzes");
+
     console.log("5 - Deletar quiz");
-    console.log("6 - Sair");
+
+    console.log("6 - Responder pergunta");
+
+    console.log("7 - Ver ranking");
+
+    console.log("8 - Sair");
+
     console.log("==============================");
 
-    rl.question("Escolha uma opção: ", (opcao) => {
 
-        switch (opcao) {
+    rl.question(
+        "Escolha uma opção: ",
+        (opcao) => {
 
-            case "1":
-                cadastrarUsuarioMenu();
-                break;
+            switch (opcao) {
 
-            case "2":
+                case "1":
 
-                console.log("\n👤 Usuários cadastrados:");
+                    cadastrarUsuarioMenu();
 
-                console.table(users);
+                    break;
 
-                menu();
 
-                break;
+                case "2":
 
-            case "3":
+                    console.log(
+                        "\n Usuários cadastrados:"
+                    );
 
-                cadastrarPerguntaMenu();
+                    console.table(users);
 
-                break;
+                    menu();
 
-            case "4":
+                    break;
 
-                console.log("\nQuizzes cadastrados:");
 
-                console.table(quizzes);
+                case "3":
 
-                menu();
+                    cadastrarPerguntaMenu();
 
-                break;
+                    break;
 
-            case "5":
 
-                deletarQuizMenu();
+                case "4":
 
-                break;
+                    console.log(
+                        "\n Quizzes cadastrados:"
+                    );
 
-            case "6":
+                    console.table(quizzes);
 
-                console.log("\nEncerrando sistema...");
+                    menu();
 
-                rl.close();
+                    break;
 
-                break;
 
-            default:
+                case "5":
 
-                console.log("\n Opção inválida!");
+                    deletarQuizMenu();
 
-                menu();
+                    break;
+
+
+                case "6":
+
+                    responderPerguntaMenu();
+
+                    break;
+
+
+                case "7":
+
+                    rankingMenu();
+
+                    break;
+
+
+                case "8":
+
+                    console.log(
+                        "\nEncerrando sistema..."
+                    );
+
+                    rl.close();
+
+                    break;
+
+
+                default:
+
+                    console.log(
+                        "\n Opção inválida!"
+                    );
+
+                    menu();
+
+            }
+
         }
+    );
 
-    });
 }
-
-
 
 
 function validarUser(req, res, next) {
@@ -246,29 +432,32 @@ function validarUser(req, res, next) {
     if (!nome) {
 
         return res.status(400).json({
+
             mensagem: "O nome é obrigatório!"
+
         });
 
     }
 
     next();
+
 }
 
 
+app.post(
+    "/usuarios",
+    validarUser,
+    (req, res) => {
 
+        const { nome, email } = req.body;
 
-app.post("/usuarios", validarUser, (req, res) => {
+        const user =
+            cadastrarUsers(nome, email);
 
-    const { nome, email } = req.body;
+        res.status(201).json(user);
 
-    const user = cadastrarUsers(nome, email);
-
-    res.status(201).json(user);
-
-});
-
-
-
+    }
+);
 
 app.post("/quizzes", (req, res) => {
 
@@ -283,12 +472,18 @@ app.post("/quizzes", (req, res) => {
         description,
 
         questions: [
+
             cadastrarQuestion(
                 quizzes.length + 1,
                 "Pergunta 1",
-                ["Opção A", "Opção B", "Opção C"],
+                [
+                    "Opção A",
+                    "Opção B",
+                    "Opção C"
+                ],
                 "Opção A"
             )
+
         ]
 
     };
@@ -299,41 +494,87 @@ app.post("/quizzes", (req, res) => {
 
 });
 
+app.delete(
+    "/quizzes/:id",
+    (req, res) => {
+
+        const quizId =
+            parseInt(req.params.id);
+
+        const index =
+            quizzes.findIndex(
+                quiz => quiz.id === quizId
+            );
+
+        if (index !== -1) {
+            quizzes.splice(index, 1);
+            res.status(200).json({
+                message:
+                    "Quiz deleted successfully"
+            });
+
+        } else {
+            res.status(404).json({
+
+                message:
+                    "Quiz not found"
+            });
+        }
+    }
+);
+app.post(
+    "/respostas",
+    (req, res) => {
+
+        const {
+            userId,
+            questionId,
+            resposta
+        } = req.body;
+
+        const resultado =
+            responderPergunta(
+                Number(userId),
+                Number(questionId),
+                resposta
+            );
 
 
-app.delete("/quizzes/:id", (req, res) => {
+        if (resultado.erro) {
 
-    const quizId = parseInt(req.params.id);
+            return res.status(404).json(
+                resultado
+            );
 
-    const index = quizzes.findIndex(
-        quiz => quiz.id === quizId
-    );
+        }
 
-    if (index !== -1) {
-
-        quizzes.splice(index, 1);
-
-        res.status(200).json({
-            message: "Quiz deleted successfully"
-        });
-
-    } else {
-
-        res.status(404).json({
-            message: "Quiz not found"
-        });
+        res.status(201).json(
+            resultado
+        );
 
     }
+);
 
-});
+app.get(
+    "/ranking",
+    (req, res) => {
 
+        const ranking =
+            gerarRanking();
 
+        res.json(ranking);
 
+    }
+);
+app.listen(
+    PORT,
+    () => {
 
-app.listen(PORT, () => {
+        console.log(
+            `Server is running on port ${PORT}`
+        );
 
-    console.log(`Server is running on port ${PORT}`);
+        menu();
 
-    menu();
-
-});
+    }
+);
