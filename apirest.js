@@ -301,36 +301,6 @@ function deletarQuizMenu() {
         }
     );
 
-}
-
-
-function menu() {
-
-    console.log("\n==============================");
-
-    console.log("       MENU DO SISTEMA");
-
-    console.log("==============================");
-
-    console.log("1 - Cadastrar usuário");
-
-    console.log("2 - Listar usuários");
-
-    console.log("3 - Cadastrar pergunta");
-
-    console.log("4 - Listar quizzes");
-
-    console.log("5 - Deletar quiz");
-
-    console.log("6 - Responder pergunta");
-
-    console.log("7 - Ver ranking");
-
-    console.log("8 - Sair");
-
-    console.log("==============================");
-
-
     rl.question(
         "Escolha uma opção: ",
         (opcao) => {
@@ -574,7 +544,6 @@ app.listen(
             `Server is running on port ${PORT}`
         );
 
-        menu();
 
     }
 );
