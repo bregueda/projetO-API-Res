@@ -3,10 +3,10 @@ let proximoId = 1;
 
 export function listar(){
     return users
-}
+};
 
-export function criar({name, email, pontuacao}){
-    if (typeof name !== 'string' || !name ) {
+export function criar({nome, email, pontuacao}){
+    if (typeof nome !== 'string' || !nome ) {
         throw new Error('Nome é obrigatório');
     }
 
@@ -16,10 +16,16 @@ export function criar({name, email, pontuacao}){
     return newUser;
 };
 
-export function editar() {
+export function editar(nome, email) {
+     if (typeof nome !== 'string' || !nome ) {
+        throw new Error('Nome é obrigatório');
+    }
 
-}
+
+
+
+};
 
 export function deletar() {
 
-}
+};
