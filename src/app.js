@@ -25,11 +25,8 @@ const answers = [
 ];
 
 
-const users = [
-    { id: 1, name: "", email: "", pontuacao: 0 },
-    { id: 2, name: "", email: "", pontuacao: 0 },
-    { id: 3, name: "", email: "", pontuacao: 0 },
-];
+const users = { id: proximoId++, nome: nome.trim(), email: email.trim()
+};
 
 
 const rl = readline.createInterface({
