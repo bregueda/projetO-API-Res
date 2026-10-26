@@ -23,31 +23,10 @@ const answers = [
     { id: 2, questionId: 2, userId: 2, answer: "" },
     { id: 3, questionId: 3, userId: 3, answer: "" },
 ];
-
-
-const users = { id: proximoId++, nome: nome.trim(), email: email.trim()
-};
-
-
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
-
-
-function cadastrarUsers(nome, email) {
-
-    const newUser = {
-        id: users.length + 1,
-        name: nome,
-        email: email,
-        pontuacao: 0
-    };
-
-    users.push(newUser);
-
-    return newUser;
-}
 
 
 function cadastrarQuestion(quizId, text, options, correctAnswer) {
