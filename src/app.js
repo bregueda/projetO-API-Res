@@ -1,3 +1,4 @@
+<<<<<<< HEAD:src/app.js
 import express from "express";
 import readline from "readline";
 
@@ -514,3 +515,5 @@ app.get(
 );
 
 export default app
+=======
+>>>>>>> 594f563 (fiz algumas coisas):apirest.js
