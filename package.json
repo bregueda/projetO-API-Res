@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-     "db:up": "docker start mongo-tarefas || docker run -d --name mongo-tarefas -p 127.0.0.1:27017:27017 -v mongo-tarefas-data:/data/db mongo:8",
-    "db:down": "docker stop mongo-tarefas",
-    "db:logs": "docker logs -f mongo-tarefas",
-    "db:reset": "docker rm -f mongo-tarefas; docker volume rm mongo-tarefas-data",
+     "db:up": "docker start mongo-quizzes || docker run -d --name mongo-quizzes -p 127.0.0.1:27017:27017 -v mongo-quizzes-data:/data/db mongo:8",
+    "db:down": "docker stop mongo-quizzes",
+    "db:logs": "docker logs -f mongo-quizzes",
+    "db:reset": "docker rm -f mongo-quizzes; docker volume rm mongo-quizzes-data",
     "predev": "npm run db:up",
     "dev": "node --watch src/server.js",
     "start": "node src/server.js"
