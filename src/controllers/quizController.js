@@ -14,6 +14,16 @@ export function criar(req, res) {
     }
 }
 
+export function editar(req, res) {
+    try {
+        const quiz = userService.editarquiz(req.params.id, req.body);
+        res.json(quiz);
+    } catch (error) {
+        res.status(400).json({ erro: error.message });
+    }
+}
+
+
 export function deletar(req, res) {
     try {
         const quiz = quizService.deletarQuiz(req.params.id);
