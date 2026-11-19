@@ -1,31 +1,36 @@
 const users = []
 let proximoId = 1;
 
-export function listar(){
-    return users
-};
+import * as model from '../models/quizzes.model.js';
+import * as model from '../models/answers.model.js';
+import * as model from '../models/questions.model.js';
+import * as model from '../models/user.model.js';
 
-export function criar({nome, email, pontuacao}){
-    if (typeof nome !== 'string' || !nome ) {
-        throw new Error('Nome é obrigatório');
-    }
+export class ErroDeValidacao extends Error {
+  constructor(mensagem) {
+    super(mensagem);
+    this.name = 'ErroDeValidacao';
+  }
+}
 
-    const newUser = {id: proximoId++, nome: nome.trim(), email: email.trim(), pontuacao: pontuacao.trim()}
-    users.push(newUser);
+function paraFormatoDaApi(documento) {
+  return {
+    id: documento._id.toHexString(),
+    titulo: documento.titulo,
+    concluida: documento.concluida,
+  };
+}
 
-    return newUser;
-};
+export async function listar() {
+  const documentos = await model.buscarTodas();
+  return documentos.map(paraFormatoDaApi);
+}
 
-export function editar(nome, email) {
-     if (typeof nome !== 'string' || !nome ) {
-        throw new Error('Nome é obrigatório');
-    }
-
-
-
-
-};
-
-export function deletar() {
-
-};
+export async function criar({ name }) {
+  if (typeof name !== 'string' || name.trim().length < 3) {
+    throw new ErroDeValidacao('O user deve ter ao menos 3 caracteres.');
+  }
+  const newUser = { name: name.trim(), concluida: false };
+  const insertedId = await model.inserir(newUser);
+  return paraFormatoDaApi({ _id: insertedId, ...newUser });
+}
