@@ -17,6 +17,7 @@ export function editar(req, res) {
     try {
         const question = userService.editarquestion(req.params.id, req.body);
         res.json(question);
+        res.status(204).json({ message: 'Question editada com sucesso' });
     } catch (error) {
         res.status(400).json({ erro: error.message });
     }

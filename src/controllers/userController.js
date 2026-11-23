@@ -18,6 +18,7 @@ export function editar(req, res) {
     try {
         const usuario = userService.editarUsuario(req.params.id, req.body);
         res.json(usuario);
+        res.status(204).json({ message: 'Usuario editado com sucesso' });
     } catch (error) {
         res.status(400).json({ erro: error.message });
     }

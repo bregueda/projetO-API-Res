@@ -16,8 +16,9 @@ export function criar(req, res) {
 
 export function editar(req, res) {
     try {
-        const quiz = userService.editarquiz(req.params.id, req.body);
+        const quiz = quizService.editarQuiz(req.params.id, req.body);
         res.json(quiz);
+        res.status(204).json({ message: 'Quiz editado com sucesso' });
     } catch (error) {
         res.status(400).json({ erro: error.message });
     }
