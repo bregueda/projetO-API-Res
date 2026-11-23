@@ -1,8 +1,10 @@
-import app from "./app"
+import 'dotenv/config';
+import app from './app.js';  
 
-app.listen(
-    PORT,
-    () => {
-        console.log(`Server is running on port ${PORT}`);
-    }
-);
+import { conectar, desconectar } from './config/database.js';
+
+await conectar();
+const servidor = app.listen(process.env.PORT || 3000, () => console.log('API em http://localhost:3000'));
+
+process.on('SIGINT', encerrar);
+process.on('SIGTERM', encerrar);
