@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-     "db:up": "docker start mongo-quizzes || docker run -d --name mongo-quizzes -p 127.0.0.1:27017:27017 -v mongo-quizzes-data:/data/db mongo:8",
+    "db:up": "docker start mongo-quizzes || docker run -d --name mongo-quizzes -p 127.0.0.1:27017:27017 -v mongo-quizzes-data:/data/db mongo:8",
     "db:down": "docker stop mongo-quizzes",
     "db:logs": "docker logs -f mongo-quizzes",
     "db:reset": "docker rm -f mongo-quizzes; docker volume rm mongo-quizzes-data",
@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/bregueda/projetO-API-Res#readme",
   "dependencies": {
+    "dotenv": "^18.0.10",
     "express": "^5.2.1",
     "readline-sync": "^1.4.10"
   }
