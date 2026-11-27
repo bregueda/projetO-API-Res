@@ -1,34 +1,43 @@
+import * as service from '../services/users.service.js';
+import { tratarErro } from '../utils/erros.js';
 
-import * as userService from '../services/userService.js';
-
-export function listar(req, res) {
-    res.json(userService.listarUsuarios());
+export async function listar(req, res) {
+  try {
+    res.json(await service.listar());
+  } catch (error) {
+    tratarErro(res, error);
+  }
 }
 
-export function criar(req, res) {
-    try {
-        const usuario = userService.criarUsuario(req.body);
-        res.status(201).json(usuario);
-    } catch (error) {
-        res.status(400).json({ erro: error.message });
-    }
+export async function buscarPorId(req, res) {
+  try {
+    res.json(await service.buscarPorId(req.params.id));
+  } catch (error) {
+    tratarErro(res, error);
+  }
 }
 
-export function editar(req, res) {
-    try {
-        const usuario = userService.editarUsuario(req.params.id, req.body);
-        res.json(usuario);
-        res.status(204).json({ message: 'Usuario editado com sucesso' });
-    } catch (error) {
-        res.status(400).json({ erro: error.message });
-    }
+export async function criar(req, res) {
+  try {
+    res.status(201).json(await service.criar(req.body));
+  } catch (error) {
+    tratarErro(res, error);
+  }
 }
 
-export function deletar(req, res) {
-    try {
-        const usuario = userService.deletarUsuario(req.params.id);
-        res.json(usuario);
-    } catch (error) {
-        res.status(400).json({ erro: error.message });
-    }
+export async function editar(req, res) {
+  try {
+    res.json(await service.editar(req.params.id, req.body));
+  } catch (error) {
+    tratarErro(res, error);
+  }
+}
+
+export async function deletar(req, res) {
+  try {
+    await service.deletar(req.params.id);
+    res.status(204).send();
+  } catch (error) {
+    tratarErro(res, error);
+  }
 }

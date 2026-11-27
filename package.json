@@ -2,7 +2,7 @@
   "name": "projeto-api-res",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "db:up": "docker start mongo-quizzes || docker run -d --name mongo-quizzes -p 127.0.0.1:27017:27017 -v mongo-quizzes-data:/data/db mongo:8",
@@ -28,6 +28,7 @@
   "dependencies": {
     "dotenv": "^18.0.10",
     "express": "^5.2.1",
+    "mongodb": "^7.9.1",
     "readline-sync": "^1.4.10"
   }
 }

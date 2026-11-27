@@ -1,35 +1,43 @@
+import * as service from '../services/quizzes.service.js';
+import { tratarErro } from '../utils/erros.js';
 
-import * as quizService from '../services/quizService.js';
-
-export function listar(req, res) {
-    res.json(quizService.listarQuizzes());
+export async function listar(req, res) {
+  try {
+    res.json(await service.listar());
+  } catch (error) {
+    tratarErro(res, error);
+  }
 }
 
-export function criar(req, res) {
-    try {
-        const quiz = quizService.criarQuiz(req.body);
-        res.status(201).json(quiz);
-    } catch (error) {
-        res.status(400).json({ erro: error.message });
-    }
+export async function buscarPorId(req, res) {
+  try {
+    res.json(await service.buscarPorId(req.params.id));
+  } catch (error) {
+    tratarErro(res, error);
+  }
 }
 
-export function editar(req, res) {
-    try {
-        const quiz = quizService.editarQuiz(req.params.id, req.body);
-        res.json(quiz);
-        res.status(204).json({ message: 'Quiz editado com sucesso' });
-    } catch (error) {
-        res.status(400).json({ erro: error.message });
-    }
+export async function criar(req, res) {
+  try {
+    res.status(201).json(await service.criar(req.body));
+  } catch (error) {
+    tratarErro(res, error);
+  }
 }
 
+export async function editar(req, res) {
+  try {
+    res.json(await service.editar(req.params.id, req.body));
+  } catch (error) {
+    tratarErro(res, error);
+  }
+}
 
-export function deletar(req, res) {
-    try {
-        const quiz = quizService.deletarQuiz(req.params.id);
-        res.json(quiz);
-    } catch (error) {
-        res.status(400).json({ erro: error.message });
-    }
+export async function deletar(req, res) {
+  try {
+    await service.deletar(req.params.id);
+    res.status(204).send();
+  } catch (error) {
+    tratarErro(res, error);
+  }
 }
